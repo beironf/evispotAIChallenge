@@ -7,6 +7,11 @@ trainData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", as.character(t
 trainData$MRCH_CITY[which(is.na(trainData$MRCH_CITY))] <- "NO_TOWN"
 trainData$MRCH_CITY <- as.factor(sapply(trainData$MRCH_CITY, toupper))
 
+#############################
+#### Fix missing values in SEX, CITY, BIRTH_YEAR
+##############################
+
+
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
 MaxTable <- function(InVec, mult = FALSE) {
@@ -93,6 +98,10 @@ for (i in 1:length(month)) {
 
 trainData <- cbind(day, month, weekday, trainData)
 
+#####################################
+#### Days since last salary?
+#####################################
+
 paydays <- vector(mode = "numeric", length = 13)
 paydays[1] <- trainData$day[which(trainData$DATE == '1/25/2017')][1]
 paydays[2] <- trainData$day[which(trainData$DATE == '2/24/2017')][1]
@@ -121,6 +130,30 @@ trainData <- cbind(sincePayday, trainData)
 
 
 ####################################
-## Any PUR96 within last week?
+#### Any PUR96 within last week? (exchange of money?)
+####################################
+
+RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+for(ID in unique(trainData$Key_ENGNO)){
+  
+}
+
 #####################################
+#### ATM transaction?
+####################################
+
+#check for PUR94 and even 100 numbers.
+
+temp <- as.numeric(levels(trainData$TRANS_AMO))[trainData$TRANS_AMO]
+evenPUR94 <- vector(mode = "logical", length = length(month))
+for (i in 1:length(month)) {
+  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' && temp[i]%%100 == 0, evenPUR94[i] <- TRUE, evenPUR94[i] <- FALSE) 
+}
+trainData <- cbind(evenPUR94, trainData)
+
+
+########################################
+###### Check for phone numbers in city data
+########################################
+
 

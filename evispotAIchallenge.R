@@ -2,6 +2,8 @@
 #testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
 #testData <- testData[,-11]
 
+library(lubridate)
+
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
 MaxTable <- function(InVec, mult = FALSE) {
@@ -86,35 +88,16 @@ testData$IN_HOME_TOWN <- IN_HOME_TOWN
 ##############################
 ### What weekday?
 ##############################
-
 #Training data
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
-monthChar <- c('1/','2/','3/','4/','5/','6/','7/','8/','9/','10','11','12')
-indexNr <- c(4,4,4,4,4,4,4,4,4,5,5,5)
-startOfMonth <- c(275,306,334,0,30,61,91,122,153,183,214,244)
-day <- vector(mode = "numeric", length = length(trainData$DATE))
-for (i in 1:length(trainData$DATE)) {
-  for (j in 1:length(monthChar)) {
-    if (substr(trainData$DATE[i], 1,2) == monthChar[j]) {
-      ifelse(substr(trainData$DATE[i], indexNr[j],indexNr[j]) == '/', day[i] <- startOfMonth[j] + as.numeric(substr(trainData$DATE[i],indexNr[j]-1,indexNr[j]-1)), day[i] <- startOfMonth[j] + as.numeric(substr(trainData$DATE[i],indexNr[j]-1,indexNr[j])))
-    }
-  }
-}
-
-dayString <- c('thursday','friday','saturday','sunday','monday','tuesday','wednesday')
-weekday <- vector("character", length = length(day))
-for (i in 1:length(weekday)) {
-  for (j in 1:length(dayString)) {
-    if (day[i]%%7 == j-1) weekday[i] <- dayString[j]
-  }
-}
-
-month <- vector(mode = "numeric", length = length(trainData$DATE))
-for (i in 1:length(month)) {
-  ifelse(substr(trainData$DATE[i], 2,2) == '/', month[i] <- as.numeric(substr(trainData$DATE[i], 1,1)), month[i] <- as.numeric(substr(trainData$DATE[i], 1,2)))
-}
+trainData$DATE <- mdy(trainData$DATE)
+day <- difftime(trainData$DATE,min(trainData$DATE)-1,units="days")
+weekday <- wday(trainData$DATE,label=T)
+weekday <- factor(weekday,ordered=F)
+month <- month(trainData$DATE,label=T)
+month <- factor(month,ordered=F)
 
 trainData <- cbind(day, month, weekday, trainData)
 
@@ -123,30 +106,12 @@ trainData <- cbind(day, month, weekday, trainData)
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
-monthChar <- c('1/','2/','3/','4/','5/','6/','7/','8/','9/','10','11','12')
-indexNr <- c(4,4,4,4,4,4,4,4,4,5,5,5)
-startOfMonth <- c(275,306,334,0,30,61,91,122,153,183,214,244)
-day <- vector(mode = "numeric", length = length(testData$DATE))
-for (i in 1:length(testData$DATE)) {
-  for (j in 1:length(monthChar)) {
-    if (substr(testData$DATE[i], 1,2) == monthChar[j]) {
-      ifelse(substr(testData$DATE[i], indexNr[j],indexNr[j]) == '/', day[i] <- startOfMonth[j] + as.numeric(substr(testData$DATE[i],indexNr[j]-1,indexNr[j]-1)), day[i] <- startOfMonth[j] + as.numeric(substr(testData$DATE[i],indexNr[j]-1,indexNr[j])))
-    }
-  }
-}
-
-dayString <- c('thursday','friday','saturday','sunday','monday','tuesday','wednesday')
-weekday <- vector("character", length = length(day))
-for (i in 1:length(weekday)) {
-  for (j in 1:length(dayString)) {
-    if (day[i]%%7 == j-1) weekday[i] <- dayString[j]
-  }
-}
-
-month <- vector(mode = "numeric", length = length(testData$DATE))
-for (i in 1:length(month)) {
-  ifelse(substr(testData$DATE[i], 2,2) == '/', month[i] <- as.numeric(substr(testData$DATE[i], 1,1)), month[i] <- as.numeric(substr(testData$DATE[i], 1,2)))
-}
+testData$DATE <- mdy(testData$DATE)
+day <- difftime(testData$DATE,min(testData$DATE)-1,units="days")
+weekday <- wday(testData$DATE,label=T)
+weekday <- factor(weekday,ordered=F)
+month <- month(testData$DATE,label=T)
+month <- factor(month,ordered=F)
 
 testData <- cbind(day, month, weekday, testData)
 

@@ -145,8 +145,16 @@ for (i in 1:length(trainData$MRCH_CITY)) {
 
 trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
                     trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
-                    trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
+                    as.numeric(levels(trainData$TRANS_AMO))[trainData$TRANS_AMO], trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
                     trainData$IN_HOME_TOWN)
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN')
+
+
+######################################
+#### Predict with random forest
+####################################
+
+library(randomForest)
+rf <- randomForest(KEYWORD ~ . , data = trainData2)

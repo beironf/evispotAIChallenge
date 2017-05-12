@@ -1,5 +1,5 @@
-trainData <- read.csv("/home/simon/Programming/evispotChallenge/data/training_data.csv", header = T)
-testData <- read.csv("/home/simon/Programming/evispotChallenge/data/test_data.csv", header = T)
+trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
 testData <- testData[,-11]
 
 #Substitute bad characters in town names

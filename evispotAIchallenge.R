@@ -138,11 +138,12 @@ trainData <- cbind(sincePayday, trainData)
 ####################################
 #### Any PUR96 within last week? (exchange of money?)
 ####################################
+# But only like 6 occurences out of 5*10^5, so perhaps not interesting?
 
-RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-for(ID in unique(trainData$Key_ENGNO)){
-  
-}
+#RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+#for(ID in unique(trainData$Key_ENGNO)){
+#  
+#}
 
 #####################################
 #### ATM transaction?
@@ -155,4 +156,19 @@ for(ID in unique(trainData$Key_ENGNO)){
 ########################################
 ###### Check for phone numbers in city data
 ########################################
+PHONE_PAYMENT <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+for (i in 1:length(trainData$MRCH_CITY)) {
+  if (substr(trainData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
+}
 
+##########################################
+#### Build data set with only relevant variables
+##########################################
+
+trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
+                    trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
+                    trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
+                    trainData$IN_HOME_TOWN)
+names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN')

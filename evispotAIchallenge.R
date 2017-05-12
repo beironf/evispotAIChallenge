@@ -1,4 +1,4 @@
-trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/trainData.csv", header = T, na.strings=" ")
 testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
 testData <- testData[,-11]
 
@@ -36,37 +36,37 @@ for(ID in unique(trainData$Key_ENGNO)){
 
 rm(list = ls())
 test_data <- read.csv('test_data.csv')
-training_data <- read.csv('training_data.csv')
+trainData <- read.csv('trainData.csv')
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
 
-date <- vector(mode = "numeric", length = length(training_data$DATE))
-for (i in 1:length(training_data$DATE)) {
-  if (substr(training_data$DATE[i], 1,2) == '4/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '5/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 30 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 30 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '6/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 61 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 61 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '7/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 91 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 91 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '8/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 122 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 122 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '9/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 153 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 153 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '10') {
-    ifelse(substr(training_data$DATE[i], 5,5) == '/', date[i] <- 183 + as.numeric(substr(training_data$DATE[i],4,4)), date[i] <- 183 + as.numeric(substr(training_data$DATE[i],4,5))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '11') {
-    ifelse(substr(training_data$DATE[i], 5,5) == '/', date[i] <- 214 + as.numeric(substr(training_data$DATE[i],4,4)), date[i] <- 214 + as.numeric(substr(training_data$DATE[i],4,5))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '12') {
-    ifelse(substr(training_data$DATE[i], 5,5) == '/', date[i] <- 244 + as.numeric(substr(training_data$DATE[i],4,4)), date[i] <- 244 + as.numeric(substr(training_data$DATE[i],4,5))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '1/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 275 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 275 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '2/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 306 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 306 + as.numeric(substr(training_data$DATE[i],3,4))) 
-  } else if (substr(training_data$DATE[i], 1,2) == '3/') {
-    ifelse(substr(training_data$DATE[i], 4,4) == '/', date[i] <- 334 + as.numeric(substr(training_data$DATE[i],3,3)), date[i] <- 334 + as.numeric(substr(training_data$DATE[i],3,4))) 
+date <- vector(mode = "numeric", length = length(trainData$DATE))
+for (i in 1:length(trainData$DATE)) {
+  if (substr(trainData$DATE[i], 1,2) == '4/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '5/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 30 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 30 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '6/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 61 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 61 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '7/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 91 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 91 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '8/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 122 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 122 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '9/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 153 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 153 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '10') {
+    ifelse(substr(trainData$DATE[i], 5,5) == '/', date[i] <- 183 + as.numeric(substr(trainData$DATE[i],4,4)), date[i] <- 183 + as.numeric(substr(trainData$DATE[i],4,5))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '11') {
+    ifelse(substr(trainData$DATE[i], 5,5) == '/', date[i] <- 214 + as.numeric(substr(trainData$DATE[i],4,4)), date[i] <- 214 + as.numeric(substr(trainData$DATE[i],4,5))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '12') {
+    ifelse(substr(trainData$DATE[i], 5,5) == '/', date[i] <- 244 + as.numeric(substr(trainData$DATE[i],4,4)), date[i] <- 244 + as.numeric(substr(trainData$DATE[i],4,5))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '1/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 275 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 275 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '2/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 306 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 306 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  } else if (substr(trainData$DATE[i], 1,2) == '3/') {
+    ifelse(substr(trainData$DATE[i], 4,4) == '/', date[i] <- 334 + as.numeric(substr(trainData$DATE[i],3,3)), date[i] <- 334 + as.numeric(substr(trainData$DATE[i],3,4))) 
   }
 }
 
@@ -82,16 +82,16 @@ for (i in 1:length(weekday)) {
 }
 
 
-month <- vector(mode = "numeric", length = length(training_data$DATE))
+month <- vector(mode = "numeric", length = length(trainData$DATE))
 for (i in 1:length(month)) {
-  ifelse(substr(training_data$DATE[i], 2,2) == '/', month[i] <- as.numeric(substr(training_data$DATE[i], 1,1)), month[i] <- as.numeric(substr(training_data$DATE[i], 1,2)))
+  ifelse(substr(trainData$DATE[i], 2,2) == '/', month[i] <- as.numeric(substr(trainData$DATE[i], 1,1)), month[i] <- as.numeric(substr(trainData$DATE[i], 1,2)))
 }
 
-training_data <- cbind(date, month, weekday, training_data)
+trainData <- cbind(date, month, weekday, trainData)
 
 
 paydays <- vector(mode = "numeric", length(month))
-payday[1] <- training_data$date[which(training_data$DATE == '1/25/2017')][1]
-payday[2] <- training_data$date[which(training_data$DATE == '1/25/2017')][1]
+payday[1] <- trainData$date[which(trainData$DATE == '1/25/2017')][1]
+payday[2] <- trainData$date[which(trainData$DATE == '1/25/2017')][1]
 
 

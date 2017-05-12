@@ -1,6 +1,4 @@
-#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
-#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
-#testData <- testData[,-11]
+# Import data with the importData.R script
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)

@@ -19,7 +19,10 @@ MaxTable <- function(InVec, mult = FALSE) {
   else levels(InVec)[which.max(A)]
 }
 
+################################
 #Check hometown/homecountry (majority of purchases made there) for each person
+################################
+
 IN_HOME_TOWN <- matrix(0, nrow = dim(trainData)[1], 1)
 IN_HOME_COUNTRY <- matrix(0, nrow = dim(trainData)[1], 1)
 for(ID in unique(trainData$Key_ENGNO)){
@@ -33,10 +36,9 @@ for(ID in unique(trainData$Key_ENGNO)){
   }
 }
 
-#
-rm(list = ls())
-testData <- read.csv('testData.csv')
-trainData <- read.csv('trainData.csv')
+##############################
+### What weekday?
+##############################
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
@@ -90,19 +92,19 @@ for (i in 1:length(month)) {
 trainData <- cbind(date, month, weekday, trainData)
 
 paydays <- vector(mode = "numeric", length = 13)
-paydays[1] <- training_data$date[which(training_data$DATE == '1/25/2017')][1]
-paydays[2] <- training_data$date[which(training_data$DATE == '2/24/2017')][1]
-paydays[3] <- training_data$date[which(training_data$DATE == '3/24/2017')][1]
+paydays[1] <- trainData$date[which(trainData$DATE == '1/25/2017')][1]
+paydays[2] <- trainData$date[which(trainData$DATE == '2/24/2017')][1]
+paydays[3] <- trainData$date[which(trainData$DATE == '3/24/2017')][1]
 paydays[4] <- -7
-paydays[5] <- training_data$date[which(training_data$DATE == '4/25/2016')][1]
-paydays[6] <- training_data$date[which(training_data$DATE == '5/25/2016')][1]
-paydays[7] <- training_data$date[which(training_data$DATE == '6/24/2016')][1]
-paydays[8] <- training_data$date[which(training_data$DATE == '7/25/2016')][1]
-paydays[9] <- training_data$date[which(training_data$DATE == '8/25/2016')][1]
-paydays[10] <- training_data$date[which(training_data$DATE == '9/23/2016')][1]
-paydays[11] <- training_data$date[which(training_data$DATE == '10/25/2016')][1]
-paydays[12] <- training_data$date[which(training_data$DATE == '11/25/2016')][1]
-paydays[13] <- training_data$date[which(training_data$DATE == '12/23/2016')][1]
+paydays[5] <- trainData$date[which(trainData$DATE == '4/25/2016')][1]
+paydays[6] <- trainData$date[which(trainData$DATE == '5/25/2016')][1]
+paydays[7] <- trainData$date[which(trainData$DATE == '6/24/2016')][1]
+paydays[8] <- trainData$date[which(trainData$DATE == '7/25/2016')][1]
+paydays[9] <- trainData$date[which(trainData$DATE == '8/25/2016')][1]
+paydays[10] <- trainData$date[which(trainData$DATE == '9/23/2016')][1]
+paydays[11] <- trainData$date[which(trainData$DATE == '10/25/2016')][1]
+paydays[12] <- trainData$date[which(trainData$DATE == '11/25/2016')][1]
+paydays[13] <- trainData$date[which(trainData$DATE == '12/23/2016')][1]
 
 sincePayday <- vector(mode = "numeric", length = length(month))
 for (i in 1:length(sincePayday)) {
@@ -113,7 +115,4 @@ for (i in 1:length(sincePayday)) {
     ifelse(date[i]-paydays[j] >= 0 && date[i]-paydays[j] < sincePayday[i], sincePayday[i] <- date[i]-paydays[j], sincePayday[i] <- sincePayday[i])
   }
 }
-training_data2 <- cbind(sincePayday, training_data)
-
-#Hej Beiron!
-#Hej Pling!
+trainData2 <- cbind(sincePayday, trainData)

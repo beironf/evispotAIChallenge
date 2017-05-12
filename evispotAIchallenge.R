@@ -3,14 +3,8 @@ testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.
 testData <- testData[,-11]
 
 #Substitute bad characters in town names
-trainData$MRCH_CITY <- gsub("å","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub("ä","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub("ö","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub("a","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub("e","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub("o","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- gsub(" ","", trainData$MRCH_CITY)
-trainData$MRCH_CITY <- lapply(trainData$MRCH_CITY, toupper)
+trainData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", trainData$MRCH_CITY)
+trainData$MRCH_CITY <- sapply(trainData$MRCH_CITY, toupper)
 
 #Function to check what is the plurality factor in a set
 #Can return multiple choices if there is a tie (optional)

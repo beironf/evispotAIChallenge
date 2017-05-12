@@ -1,4 +1,6 @@
-# Import data with the importData.R script
+#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
+#testData <- testData[,-11]
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -45,7 +47,8 @@ for(ID in unique(trainData$Key_ENGNO)){
     if (trainData$MRCH_CTRY[i] == homeCountry) IN_HOME_COUNTRY[i] <- 1
   }
 }
-
+trainData$IN_HOME_COUNTRY <- IN_HOME_COUNTRY 
+trainData$IN_HOME_TOWN <- IN_HOME_TOWN
 ##############################
 ### What weekday?
 ##############################
@@ -107,7 +110,7 @@ for (i in 1:length(sincePayday)) {
     ifelse(day[i]-paydays[j] >= 0 && day[i]-paydays[j] < sincePayday[i], sincePayday[i] <- day[i]-paydays[j], sincePayday[i] <- sincePayday[i])
   }
 }
-trainData2 <- cbind(sincePayday, trainData)
+trainData <- cbind(sincePayday, trainData)
 
 
 ####################################

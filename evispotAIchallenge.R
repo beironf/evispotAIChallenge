@@ -1,4 +1,6 @@
-# Import data with the importData.R script
+#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
+#testData <- testData[,-11]
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -46,6 +48,9 @@ for(ID in unique(trainData$Key_ENGNO)){
   }
 }
 
+trainData$IN_HOME_COUNTRY <- IN_HOME_COUNTRY 
+trainData$IN_HOME_TOWN <- IN_HOME_TOWN
+
 
 ##############################
 ### What weekday?
@@ -54,47 +59,25 @@ for(ID in unique(trainData$Key_ENGNO)){
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
-
+monthChar <- c('1/','2/','3/','4/','5/','6/','7/','8/','9/','10','11','12')
+indexNr <- c(4,4,4,4,4,4,4,4,4,5,5,5)
+startOfMonth <- c(275,306,334,0,30,61,91,122,153,183,214,244)
 day <- vector(mode = "numeric", length = length(trainData$DATE))
 for (i in 1:length(trainData$DATE)) {
-  if (substr(trainData$DATE[i], 1,2) == '4/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '5/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 30 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 30 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '6/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 61 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 61 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '7/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 91 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 91 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '8/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 122 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 122 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '9/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 153 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 153 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '10') {
-    ifelse(substr(trainData$DATE[i], 5,5) == '/', day[i] <- 183 + as.numeric(substr(trainData$DATE[i],4,4)), day[i] <- 183 + as.numeric(substr(trainData$DATE[i],4,5))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '11') {
-    ifelse(substr(trainData$DATE[i], 5,5) == '/', day[i] <- 214 + as.numeric(substr(trainData$DATE[i],4,4)), day[i] <- 214 + as.numeric(substr(trainData$DATE[i],4,5))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '12') {
-    ifelse(substr(trainData$DATE[i], 5,5) == '/', day[i] <- 244 + as.numeric(substr(trainData$DATE[i],4,4)), day[i] <- 244 + as.numeric(substr(trainData$DATE[i],4,5))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '1/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 275 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 275 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '2/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 306 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 306 + as.numeric(substr(trainData$DATE[i],3,4))) 
-  } else if (substr(trainData$DATE[i], 1,2) == '3/') {
-    ifelse(substr(trainData$DATE[i], 4,4) == '/', day[i] <- 334 + as.numeric(substr(trainData$DATE[i],3,3)), day[i] <- 334 + as.numeric(substr(trainData$DATE[i],3,4))) 
+  for (j in 1:length(monthChar)) {
+    if (substr(trainData$DATE[i], 1,2) == monthChar[j]) {
+      ifelse(substr(trainData$DATE[i], indexNr[j],indexNr[j]) == '/', day[i] <- startOfMonth[j] + as.numeric(substr(trainData$DATE[i],indexNr[j]-1,indexNr[j]-1)), day[i] <- startOfMonth[j] + as.numeric(substr(trainData$DATE[i],indexNr[j]-1,indexNr[j])))
+    }
   }
 }
 
+dayString <- c('thursday','friday','saturday','sunday','monday','tuesday','wednesday')
 weekday <- vector("character", length = length(day))
 for (i in 1:length(weekday)) {
-  ifelse(day[i]%%7 == 0, weekday[i] <- 'thursday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 1, weekday[i] <- 'friday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 2, weekday[i] <- 'saturday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 3, weekday[i] <- 'sunday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 4, weekday[i] <- 'monday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 5, weekday[i] <- 'tuesday', weekday[i] <- weekday[i])
-  ifelse(day[i]%%7 == 6, weekday[i] <- 'wednesday', weekday[i] <- weekday[i])
+  for (j in 1:length(dayString)) {
+    if (day[i]%%7 == j-1) weekday[i] <- dayString[j]
+  }
 }
-
 
 month <- vector(mode = "numeric", length = length(trainData$DATE))
 for (i in 1:length(month)) {
@@ -138,10 +121,8 @@ trainData <- cbind(sincePayday, trainData)
 ####################################
 #### Any PUR96 within last week? (exchange of money?)
 ####################################
+# But only like 6 occurences out of 5*10^5, so perhaps not interesting?
 
-#RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-#for(ID in unique(trainData$Key_ENGNO)){
-#}
 
 #####################################
 #### ATM transaction?
@@ -160,5 +141,20 @@ trainData <- cbind(evenPUR94, trainData)
 ########################################
 ###### Check for phone numbers in city data
 ########################################
+PHONE_PAYMENT <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+for (i in 1:length(trainData$MRCH_CITY)) {
+  if (substr(trainData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
+}
 
+##########################################
+#### Build data set with only relevant variables
+##########################################
+
+trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
+                    trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
+                    trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
+                    trainData$IN_HOME_TOWN)
+names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN')
 

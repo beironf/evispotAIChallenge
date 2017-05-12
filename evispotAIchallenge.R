@@ -160,7 +160,7 @@ names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
 
 ######################################
 #### Predict with random forest
-####################################
+######################################
 
 library(randomForest)
 rf <- randomForest(KEYWORD ~ . , data = trainData2)

@@ -4,10 +4,8 @@ testData <- testData[,-11]
 
 #Substitute bad characters in town names
 trainData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", as.character(trainData$MRCH_CITY))
-trainData$MRCH_CITY <- as.factor(sapply(trainData$MRCH_CITY, toupper))
-
-#Remove NA and substitute for NO_TOWN
 trainData$MRCH_CITY[which(is.na(trainData$MRCH_CITY))] <- "NO_TOWN"
+trainData$MRCH_CITY <- as.factor(sapply(trainData$MRCH_CITY, toupper))
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -24,7 +22,6 @@ MaxTable <- function(InVec, mult = FALSE) {
 IN_HOME_TOWN <- matrix(0, nrow = dim(trainData)[1], 1)
 IN_HOME_COUNTRY <- matrix(0, nrow = dim(trainData)[1], 1)
 for(ID in unique(trainData$Key_ENGNO)){
-  print(ID)
   ii <- which(trainData$Key_ENGNO == ID) #index vector
   homeTown <- MaxTable(trainData$MRCH_CITY[ii]) #decide hometown
   homeCountry <- MaxTable(trainData$MRCH_CTRY[ii])

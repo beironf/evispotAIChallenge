@@ -113,3 +113,5 @@ for (i in 1:length(sincePayday)) {
   }
 }
 training_data2 <- cbind(sincePayday, training_data)
+
+#Hej Beiron!

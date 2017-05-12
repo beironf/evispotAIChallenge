@@ -1,4 +1,4 @@
-trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/trainData.csv", header = T, na.strings=" ")
+trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
 testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
 testData <- testData[,-11]
 
@@ -35,7 +35,7 @@ for(ID in unique(trainData$Key_ENGNO)){
 #
 
 rm(list = ls())
-test_data <- read.csv('test_data.csv')
+testData <- read.csv('testData.csv')
 trainData <- read.csv('trainData.csv')
 
 # First transaction 4/1/2016

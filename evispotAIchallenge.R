@@ -32,6 +32,7 @@ trainData$BIRTH_YEAR[which(is.na(trainData$BIRTH_YEAR))] <- meanBirthYear
 ################################
 #Check hometown/homecountry (majority of purchases made there) for each person
 ################################
+#Also updates "NO_TOWN" to hometown (best guess for missing value)
 
 IN_HOME_TOWN <- matrix(0, nrow = dim(trainData)[1], 1)
 IN_HOME_COUNTRY <- matrix(0, nrow = dim(trainData)[1], 1)
@@ -41,6 +42,7 @@ for(ID in unique(trainData$Key_ENGNO)){
   homeCountry <- MaxTable(trainData$MRCH_CTRY[ii])
   #loop though and check what transactions were actually made in hometown/country
   for(i in ii){ 
+    if (trainData$MRCH_CITY[i] == "NO_TOWN") trainData$MRCH_CITY[i] <- homeTown
     if (trainData$MRCH_CITY[i] == homeTown) IN_HOME_TOWN[i] <- 1
     if (trainData$MRCH_CTRY[i] == homeCountry) IN_HOME_COUNTRY[i] <- 1
   }

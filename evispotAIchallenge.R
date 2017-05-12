@@ -47,11 +47,15 @@ for(ID in unique(trainData$Key_ENGNO)){
     if (trainData$MRCH_CTRY[i] == homeCountry) IN_HOME_COUNTRY[i] <- 1
   }
 }
+
 trainData$IN_HOME_COUNTRY <- IN_HOME_COUNTRY 
 trainData$IN_HOME_TOWN <- IN_HOME_TOWN
+
+
 ##############################
 ### What weekday?
 ##############################
+
 
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
@@ -79,6 +83,7 @@ month <- vector(mode = "numeric", length = length(trainData$DATE))
 for (i in 1:length(month)) {
   ifelse(substr(trainData$DATE[i], 2,2) == '/', month[i] <- as.numeric(substr(trainData$DATE[i], 1,1)), month[i] <- as.numeric(substr(trainData$DATE[i], 1,2)))
 }
+
 
 trainData <- cbind(day, month, weekday, trainData)
 
@@ -118,10 +123,6 @@ trainData <- cbind(sincePayday, trainData)
 ####################################
 # But only like 6 occurences out of 5*10^5, so perhaps not interesting?
 
-#RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-#for(ID in unique(trainData$Key_ENGNO)){
-#  
-#}
 
 #####################################
 #### ATM transaction?
@@ -129,6 +130,12 @@ trainData <- cbind(sincePayday, trainData)
 
 #check for PUR94 and even 100 numbers.
 
+temp <- as.numeric(levels(trainData$TRANS_AMO))[trainData$TRANS_AMO]
+evenPUR94 <- vector(mode = "logical", length = length(month))
+for (i in 1:length(month)) {
+  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' && temp[i]%%100 == 0, evenPUR94[i] <- TRUE, evenPUR94[i] <- FALSE) 
+}
+trainData <- cbind(evenPUR94, trainData)
 
 
 ########################################
@@ -150,3 +157,4 @@ trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$mon
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN')
+

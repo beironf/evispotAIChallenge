@@ -1,16 +1,4 @@
-#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
-#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
-#testData <- testData[,-11]
-
-#Substitute bad characters in town names
-trainData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", as.character(trainData$MRCH_CITY))
-trainData$MRCH_CITY[which(is.na(trainData$MRCH_CITY))] <- "NO_TOWN"
-trainData$MRCH_CITY <- as.factor(sapply(trainData$MRCH_CITY, toupper))
-
-#############################
-#### Fix missing values in SEX, CITY, BIRTH_YEAR
-##############################
-
+# Import data with the importData.R script
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -23,9 +11,26 @@ MaxTable <- function(InVec, mult = FALSE) {
   else levels(InVec)[which.max(A)]
 }
 
+#########################################
+#### Substitute bad characters in town names
+#########################################
+trainData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", as.character(trainData$MRCH_CITY))
+trainData$MRCH_CITY[which(is.na(trainData$MRCH_CITY))] <- "NO_TOWN"
+trainData$MRCH_CITY <- as.factor(sapply(trainData$MRCH_CITY, toupper))
+
+#############################
+#### Fix missing values in SEX, CITY
+##############################
+majoritySex <- MaxTable(trainData$SEX)
+meanBirthYear <- round(mean(trainData$BIRTH_YEAR[!is.na(trainData$BIRTH_YEAR)]))
+trainData$SEX[which(is.na(trainData$SEX))] <- majoritySex
+trainData$BIRTH_YEAR[which(is.na(trainData$BIRTH_YEAR))] <- meanBirthYear
+
+
 ################################
 #Check hometown/homecountry (majority of purchases made there) for each person
 ################################
+#Also updates "NO_TOWN" to hometown (best guess for missing value)
 
 IN_HOME_TOWN <- matrix(0, nrow = dim(trainData)[1], 1)
 IN_HOME_COUNTRY <- matrix(0, nrow = dim(trainData)[1], 1)
@@ -35,6 +40,7 @@ for(ID in unique(trainData$Key_ENGNO)){
   homeCountry <- MaxTable(trainData$MRCH_CTRY[ii])
   #loop though and check what transactions were actually made in hometown/country
   for(i in ii){ 
+    if (trainData$MRCH_CITY[i] == "NO_TOWN") trainData$MRCH_CITY[i] <- homeTown
     if (trainData$MRCH_CITY[i] == homeTown) IN_HOME_TOWN[i] <- 1
     if (trainData$MRCH_CTRY[i] == homeCountry) IN_HOME_COUNTRY[i] <- 1
   }
@@ -133,10 +139,9 @@ trainData <- cbind(sincePayday, trainData)
 #### Any PUR96 within last week? (exchange of money?)
 ####################################
 
-RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-for(ID in unique(trainData$Key_ENGNO)){
-  
-}
+#RECENT_EXCHANGE <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+#for(ID in unique(trainData$Key_ENGNO)){
+#}
 
 #####################################
 #### ATM transaction?

@@ -93,7 +93,7 @@ testData$IN_HOME_TOWN <- IN_HOME_TOWN
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
 trainData$DATE <- mdy(trainData$DATE)
-day <- difftime(trainData$DATE,min(trainData$DATE)-1,units="days")
+day <- as.numeric(difftime(trainData$DATE,min(trainData$DATE)-1,units="days"))
 weekday <- wday(trainData$DATE,label=T)
 weekday <- factor(weekday,ordered=F)
 month <- month(trainData$DATE,label=T)
@@ -107,7 +107,7 @@ trainData <- cbind(day, month, weekday, trainData)
 # First transaction 4/1/2016
 # Last transaction 3/31/2017
 testData$DATE <- mdy(testData$DATE)
-day <- difftime(testData$DATE,min(testData$DATE)-1,units="days")
+day <- as.numeric(difftime(testData$DATE,min(testData$DATE)-1,units="days"))
 weekday <- wday(testData$DATE,label=T)
 weekday <- factor(weekday,ordered=F)
 month <- month(testData$DATE,label=T)
@@ -121,57 +121,29 @@ testData <- cbind(day, month, weekday, testData)
 #####################################
 
 #training data
-paydays <- vector(mode = "numeric", length = 13)
-paydays[1] <- trainData$day[which(trainData$DATE == '1/25/2017')][1]
-paydays[2] <- trainData$day[which(trainData$DATE == '2/24/2017')][1]
-paydays[3] <- trainData$day[which(trainData$DATE == '3/24/2017')][1]
-paydays[4] <- -7
-paydays[5] <- trainData$day[which(trainData$DATE == '4/25/2016')][1]
-paydays[6] <- trainData$day[which(trainData$DATE == '5/25/2016')][1]
-paydays[7] <- trainData$day[which(trainData$DATE == '6/24/2016')][1]
-paydays[8] <- trainData$day[which(trainData$DATE == '7/25/2016')][1]
-paydays[9] <- trainData$day[which(trainData$DATE == '8/25/2016')][1]
-paydays[10] <- trainData$day[which(trainData$DATE == '9/23/2016')][1]
-paydays[11] <- trainData$day[which(trainData$DATE == '10/25/2016')][1]
-paydays[12] <- trainData$day[which(trainData$DATE == '11/25/2016')][1]
-paydays[13] <- trainData$day[which(trainData$DATE == '12/23/2016')][1]
+day <- as.numeric(difftime(trainData$DATE,min(trainData$DATE)-1,units="days"))
+paydays <- sort(mdy(c('1/25/2017','2/24/2017','3/24/2017','3/25/2016','4/25/2016','5/25/2016','6/24/2016','7/25/2016','8/25/2016','9/23/2016','10/25/2016','11/25/2016','12/23/2016')))
+paydays <- as.numeric(difftime(paydays,min(trainData$DATE)-1,units="days"))
+sincePayday <- day-paydays[1]
+for (i in 2:length(paydays)) {
+  sincePayday <- cbind(sincePayday,day-paydays[i])
+}
+sincePayday[which(sincePayday < 0)] <- -1000
+sincePayday <- apply(abs(sincePayday),1,min)
 
-sincePayday <- vector(mode = "numeric", length = dim(trainData)[1])
-for (i in 1:length(sincePayday)) {
-  sincePayday[i] <- 1000
-}
-for (i in 1:length(sincePayday)) {
-  for (j in 1:13) {
-    ifelse(day[i]-paydays[j] >= 0 && day[i]-paydays[j] < sincePayday[i], sincePayday[i] <- day[i]-paydays[j], sincePayday[i] <- sincePayday[i])
-  }
-}
 trainData <- cbind(sincePayday, trainData)
 
 #testing data
-paydays <- vector(mode = "numeric", length = 13)
-paydays[1] <- testData$day[which(testData$DATE == '1/25/2017')][1]
-paydays[2] <- testData$day[which(testData$DATE == '2/24/2017')][1]
-paydays[3] <- testData$day[which(testData$DATE == '3/24/2017')][1]
-paydays[4] <- -7
-paydays[5] <- testData$day[which(testData$DATE == '4/25/2016')][1]
-paydays[6] <- testData$day[which(testData$DATE == '5/25/2016')][1]
-paydays[7] <- testData$day[which(testData$DATE == '6/24/2016')][1]
-paydays[8] <- testData$day[which(testData$DATE == '7/25/2016')][1]
-paydays[9] <- testData$day[which(testData$DATE == '8/25/2016')][1]
-paydays[10] <- testData$day[which(testData$DATE == '9/23/2016')][1]
-paydays[11] <- testData$day[which(testData$DATE == '10/25/2016')][1]
-paydays[12] <- testData$day[which(testData$DATE == '11/25/2016')][1]
-paydays[13] <- testData$day[which(testData$DATE == '12/23/2016')][1]
+day <- as.numeric(difftime(testData$DATE,min(testData$DATE)-1,units="days"))
+paydays <- sort(mdy(c('1/25/2017','2/24/2017','3/24/2017','3/25/2016','4/25/2016','5/25/2016','6/24/2016','7/25/2016','8/25/2016','9/23/2016','10/25/2016','11/25/2016','12/23/2016')))
+paydays <- as.numeric(difftime(paydays,min(trainData$DATE)-1,units="days"))
+sincePayday <- day-paydays[1]
+for (i in 2:length(paydays)) {
+  sincePayday <- cbind(sincePayday,day-paydays[i])
+}
+sincePayday[which(sincePayday < 0)] <- -1000
+sincePayday <- apply(abs(sincePayday),1,min)
 
-sincePayday <- vector(mode = "numeric", length = dim(testData)[1])
-for (i in 1:length(sincePayday)) {
-  sincePayday[i] <- 1000
-}
-for (i in 1:length(sincePayday)) {
-  for (j in 1:13) {
-    ifelse(day[i]-paydays[j] >= 0 && day[i]-paydays[j] < sincePayday[i], sincePayday[i] <- day[i]-paydays[j], sincePayday[i] <- sincePayday[i])
-  }
-}
 testData <- cbind(sincePayday, testData)
 
 ####################################

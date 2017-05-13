@@ -45,7 +45,7 @@ testData$SEX[which(is.na(testData$SEX))] <- majoritySex
 testData$BIRTH_YEAR[which(is.na(testData$BIRTH_YEAR))] <- meanBirthYear
 
 ################################
-#Check hometown/homecountry (majority of purchases made there) for each person
+#### Check hometown/homecountry (majority of purchases made there) for each person
 ################################
 #Also updates "NO_TOWN" to hometown (best guess for missing value)
 
@@ -213,6 +213,7 @@ PHONE_PAYMENT <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
 for (i in 1:length(trainData$MRCH_CITY)) {
   if (substr(trainData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
 }
+trainData$PHONE_PAYMENT <- PHONE_PAYMENT
 
 
 
@@ -221,7 +222,7 @@ PHONE_PAYMENT <- matrix(0, nrow = dim(testData)[1], ncol = 1)
 for (i in 1:length(testData$MRCH_CITY)) {
   if (substr(testData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
 }
-
+testData$PHONE_PAYMENT <- PHONE_PAYMENT
 ##########################################
 #### Build data set with only relevant variables
 ##########################################
@@ -233,10 +234,11 @@ trainData$TRANS_AMO <- gsub(",",".", as.character(trainData$TRANS_AMO))
 trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
                     trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
                     as.numeric(trainData$TRANS_AMO), trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
-                    trainData$IN_HOME_TOWN)
+                    trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT)
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN')
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT')
+write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
 
 #testing data
 # Change , to . in TRANS_AMO
@@ -245,11 +247,11 @@ testData$TRANS_AMO <- gsub(",",".", as.character(testData$TRANS_AMO))
 testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, testData$month, 
                          testData$weekday, testData$BIRTH_YEAR, testData$SEX,
                          as.numeric(testData$TRANS_AMO), testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
-                         testData$IN_HOME_TOWN)
+                         testData$IN_HOME_TOWN, testData$PHONE_PAYMENT)
 names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN')
-
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT')
+write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
 
 ######################################
 #### Predict with random forest
@@ -268,3 +270,12 @@ rf.object <- randomForest(x = trainData2[,-1], y = trainData2[,1],
 #                                  training_frame = df,
 #                                  validation_frame = test)
 #pred <- predict(rf.h2o.object, test)
+
+
+#######################################
+#### Naive bayes?
+#######################################
+
+library(e1071)
+nb.object <- naiveBayes(KEYWORD~., data = trainData2)
+nb.pred <- predict(nb.object, testData2)

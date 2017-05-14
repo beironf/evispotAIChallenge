@@ -176,7 +176,6 @@ kk <- which(trainData$TRANS_AMO[ii[jj]]%%100 == 0)
 evenPUR94[ii[jj[kk]]] <- 1
 trainData$EVEN_WITHDRAWAL_SE <- evenPUR94
 
-
 #testing data
 evenPUR94 <- rep(0,dim(testData)[1])
 ii <- which(testData$TRANSTYP_CODE == 'PUR94')
@@ -191,23 +190,14 @@ testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 ########################################
 
 #training data
-PHONE_NUMBER_START <- rep('IS_CITY',dim(trainData)[1])
-PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- '+'
-for (i in 0:9) {
-   PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == as.character(i))] <- as.character(i)
-}
-PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
+PHONE_NUMBER_START <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
 trainData$PHONE_NUMBER_START <- PHONE_NUMBER_START
 
 #testing data
-PHONE_NUMBER_START <- rep('IS_CITY',dim(testData)[1])
-PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- '+'
-for (i in 0:9) {
-  PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == as.character(i))] <- as.character(i)
-}
-PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
+PHONE_NUMBER_START <- matrix(0, nrow = dim(testData)[1], ncol = 1)
+PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
 testData$PHONE_NUMBER_START <- PHONE_NUMBER_START
-
 
 ##########################################
 #### Check if transaction amount is decimal number
@@ -359,21 +349,18 @@ isOct <- vector("logical", dim(testData)[1])
 isNov <- vector("logical", dim(testData)[1])
 isDec <- vector("logical", dim(testData)[1])
 
-
-for (i in 1:dim(trainData)[1]) {
-  isJan[i] <- testData$month[i] == "Jan"
-  isFeb[i] <- testData$month[i] == "Feb"
-  isMar[i] <- testData$month[i] == "Mar"
-  isApr[i] <- testData$month[i] == "Apr"
-  isMay[i] <- testData$month[i] == "May"
-  isJun[i] <- testData$month[i] == "Jun"
-  isJul[i] <- testData$month[i] == "Jul"
-  isAug[i] <- testData$month[i] == "Aug"
-  isSep[i] <- testData$month[i] == "Sep"
-  isOct[i] <- testData$month[i] == "Oct"
-  isNov[i] <- testData$month[i] == "Nov"
-  isDec[i] <- testData$month[i] == "Dec"
-}
+isJan[which(testData$month == 'Jan')] <- TRUE
+isFeb[which(testData$month == 'Feb')] <- TRUE
+isMar[which(testData$month == 'Mar')] <- TRUE
+isApr[which(testData$month == 'Apr')] <- TRUE
+isMay[which(testData$month == 'May')] <- TRUE
+isJun[which(testData$month == 'Jun')] <- TRUE
+isJul[which(testData$month == 'Jul')] <- TRUE
+isAug[which(testData$month == 'Aug')] <- TRUE
+isSep[which(testData$month == 'Sep')] <- TRUE
+isOct[which(testData$month == 'Oct')] <- TRUE
+isNov[which(testData$month == 'Nov')] <- TRUE
+isDec[which(testData$month == 'Dec')] <- TRUE
 
 testData$isJan <- isJan
 testData$isFeb <- isFeb
@@ -401,16 +388,12 @@ isPUR93 <- vector("logical", dim(trainData)[1])
 isPUR94 <- vector("logical", dim(trainData)[1])
 isPUR96 <- vector("logical", dim(trainData)[1])
 
-
-
-for (i in 1:dim(trainData)[1]) {
-  isPUR90[i] <- trainData$month[i] == "PUR90"
-  isPUR91[i] <- trainData$month[i] == "PUR91"
-  isPUR92[i] <- trainData$month[i] == "PUR92"
-  isPUR93[i] <- trainData$month[i] == "PUR93"
-  isPUR94[i] <- trainData$month[i] == "PUR94"
-  isPUR96[i] <- trainData$month[i] == "PUR96"
-}
+isPUR90[which(trainData$TRANSTYP_CODE == 'PUR90')] <- TRUE
+isPUR91[which(trainData$TRANSTYP_CODE == 'PUR91')] <- TRUE
+isPUR92[which(trainData$TRANSTYP_CODE == 'PUR92')] <- TRUE
+isPUR93[which(trainData$TRANSTYP_CODE == 'PUR93')] <- TRUE
+isPUR94[which(trainData$TRANSTYP_CODE == 'PUR94')] <- TRUE
+isPUR96[which(trainData$TRANSTYP_CODE == 'PUR96')] <- TRUE
 
 trainData$isPUR90 <- isPUR90
 trainData$isPUR91 <- isPUR91
@@ -430,15 +413,12 @@ isPUR94 <- vector("logical", dim(testData)[1])
 isPUR96 <- vector("logical", dim(testData)[1])
 
 
-
-for (i in 1:dim(trainData)[1]) {
-  isPUR90[i] <- testData$month[i] == "PUR90"
-  isPUR91[i] <- testData$month[i] == "PUR91"
-  isPUR92[i] <- testData$month[i] == "PUR92"
-  isPUR93[i] <- testData$month[i] == "PUR93"
-  isPUR94[i] <- testData$month[i] == "PUR94"
-  isPUR96[i] <- testData$month[i] == "PUR96"
-}
+isPUR90[which(testData$TRANSTYP_CODE == 'PUR90')] <- TRUE
+isPUR91[which(testData$TRANSTYP_CODE == 'PUR91')] <- TRUE
+isPUR92[which(testData$TRANSTYP_CODE == 'PUR92')] <- TRUE
+isPUR93[which(testData$TRANSTYP_CODE == 'PUR93')] <- TRUE
+isPUR94[which(testData$TRANSTYP_CODE == 'PUR94')] <- TRUE
+isPUR96[which(testData$TRANSTYP_CODE == 'PUR96')] <- TRUE
 
 testData$isPUR90 <- isPUR90
 testData$isPUR91 <- isPUR91
@@ -453,27 +433,33 @@ testData$isPUR96 <- isPUR96
 ##########################################
 #training data
 
-trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
+trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, 
                          trainData$BIRTH_YEAR, trainData$SEX,
-                         trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
-                         trainData$IN_HOME_TOWN, trainData$PHONE_NUMBER_START, trainData$EVEN_WITHDRAWAL_SE)
+                         trainData$TRANS_AMO, trainData$IN_HOME_COUNTRY,
+                         trainData$IN_HOME_TOWN, trainData$PHONE_NUMBER_START, trainData$EVEN_WITHDRAWAL_SE,
+                         trainData$DECIMAL_COST, 
+                         trainData[,19:43])
 
-names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
-                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
+names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
-                       'EVEN_WITHDRAWAL_SE')
+                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(trainData[19:43]))
+
 write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
 
-testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, testData$month, 
-                        testData$weekday, testData$BIRTH_YEAR, testData$SEX,
-                        testData$TRANS_AMO, testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
-                        testData$IN_HOME_TOWN, testData$PHONE_NUMBER_START, testData$EVEN_WITHDRAWAL_SE)
-names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
-                      'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                      'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
-                      'EVEN_WITHDRAWAL_SE')
+testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, 
+                        testData$BIRTH_YEAR, testData$SEX,
+                        testData$TRANS_AMO, testData$IN_HOME_COUNTRY,
+                        testData$IN_HOME_TOWN, testData$PHONE_NUMBER_START, testData$EVEN_WITHDRAWAL_SE,
+                        testData$DECIMAL_COST,
+                        testData[,19:43])
+names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
+                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(testData[19:43]))
+
 write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
 

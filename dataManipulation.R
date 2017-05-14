@@ -339,21 +339,18 @@ isOct <- vector("logical", dim(testData)[1])
 isNov <- vector("logical", dim(testData)[1])
 isDec <- vector("logical", dim(testData)[1])
 
-
-for (i in 1:dim(trainData)[1]) {
-  isJan[i] <- testData$month[i] == "Jan"
-  isFeb[i] <- testData$month[i] == "Feb"
-  isMar[i] <- testData$month[i] == "Mar"
-  isApr[i] <- testData$month[i] == "Apr"
-  isMay[i] <- testData$month[i] == "May"
-  isJun[i] <- testData$month[i] == "Jun"
-  isJul[i] <- testData$month[i] == "Jul"
-  isAug[i] <- testData$month[i] == "Aug"
-  isSep[i] <- testData$month[i] == "Sep"
-  isOct[i] <- testData$month[i] == "Oct"
-  isNov[i] <- testData$month[i] == "Nov"
-  isDec[i] <- testData$month[i] == "Dec"
-}
+isJan[which(testData$month == 'Jan')] <- TRUE
+isFeb[which(testData$month == 'Feb')] <- TRUE
+isMar[which(testData$month == 'Mar')] <- TRUE
+isApr[which(testData$month == 'Apr')] <- TRUE
+isMay[which(testData$month == 'May')] <- TRUE
+isJun[which(testData$month == 'Jun')] <- TRUE
+isJul[which(testData$month == 'Jul')] <- TRUE
+isAug[which(testData$month == 'Aug')] <- TRUE
+isSep[which(testData$month == 'Sep')] <- TRUE
+isOct[which(testData$month == 'Oct')] <- TRUE
+isNov[which(testData$month == 'Nov')] <- TRUE
+isDec[which(testData$month == 'Dec')] <- TRUE
 
 testData$isJan <- isJan
 testData$isFeb <- isFeb
@@ -381,16 +378,12 @@ isPUR93 <- vector("logical", dim(trainData)[1])
 isPUR94 <- vector("logical", dim(trainData)[1])
 isPUR96 <- vector("logical", dim(trainData)[1])
 
-
-
-for (i in 1:dim(trainData)[1]) {
-  isPUR90[i] <- trainData$month[i] == "PUR90"
-  isPUR91[i] <- trainData$month[i] == "PUR91"
-  isPUR92[i] <- trainData$month[i] == "PUR92"
-  isPUR93[i] <- trainData$month[i] == "PUR93"
-  isPUR94[i] <- trainData$month[i] == "PUR94"
-  isPUR96[i] <- trainData$month[i] == "PUR96"
-}
+isPUR90[which(trainData$TRANSTYP_CODE == 'PUR90')] <- TRUE
+isPUR91[which(trainData$TRANSTYP_CODE == 'PUR91')] <- TRUE
+isPUR92[which(trainData$TRANSTYP_CODE == 'PUR92')] <- TRUE
+isPUR93[which(trainData$TRANSTYP_CODE == 'PUR93')] <- TRUE
+isPUR94[which(trainData$TRANSTYP_CODE == 'PUR94')] <- TRUE
+isPUR96[which(trainData$TRANSTYP_CODE == 'PUR96')] <- TRUE
 
 trainData$isPUR90 <- isPUR90
 trainData$isPUR91 <- isPUR91
@@ -410,15 +403,12 @@ isPUR94 <- vector("logical", dim(testData)[1])
 isPUR96 <- vector("logical", dim(testData)[1])
 
 
-
-for (i in 1:dim(trainData)[1]) {
-  isPUR90[i] <- testData$month[i] == "PUR90"
-  isPUR91[i] <- testData$month[i] == "PUR91"
-  isPUR92[i] <- testData$month[i] == "PUR92"
-  isPUR93[i] <- testData$month[i] == "PUR93"
-  isPUR94[i] <- testData$month[i] == "PUR94"
-  isPUR96[i] <- testData$month[i] == "PUR96"
-}
+isPUR90[which(testData$TRANSTYP_CODE == 'PUR90')] <- TRUE
+isPUR91[which(testData$TRANSTYP_CODE == 'PUR91')] <- TRUE
+isPUR92[which(testData$TRANSTYP_CODE == 'PUR92')] <- TRUE
+isPUR93[which(testData$TRANSTYP_CODE == 'PUR93')] <- TRUE
+isPUR94[which(testData$TRANSTYP_CODE == 'PUR94')] <- TRUE
+isPUR96[which(testData$TRANSTYP_CODE == 'PUR96')] <- TRUE
 
 testData$isPUR90 <- isPUR90
 testData$isPUR91 <- isPUR91

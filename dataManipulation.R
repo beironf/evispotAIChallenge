@@ -190,14 +190,20 @@ testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 ########################################
 
 #training data
-PHONE_NUMBER_START <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
-trainData$PHONE_NUMBER_START <- PHONE_NUMBER_START
+PHONE_NUMBER_START <- rep("IN_CITY", dim(trainData)[1])
+PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY,1,1) == '+')] <- '+'
+for (i in 0:9) {
+  PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY,1,1) == as.character(i))] <- as.character(i)
+}
+trainData$PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
 
 #testing data
-PHONE_NUMBER_START <- matrix(0, nrow = dim(testData)[1], ncol = 1)
-PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
-testData$PHONE_NUMBER_START <- PHONE_NUMBER_START
+PHONE_NUMBER_START <- rep("IN_CITY", dim(testData)[1])
+PHONE_NUMBER_START[which(substr(testData$MRCH_CITY,1,1) == '+')] <- '+'
+for (i in 0:9) {
+  PHONE_NUMBER_START[which(substr(testData$MRCH_CITY,1,1) == as.character(i))] <- as.character(i)
+}
+testData$PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
 
 ##########################################
 #### Check if transaction amount is decimal number

@@ -34,7 +34,12 @@ sum(diag(table(nb.pred, testData2$KEYWORD))) / dim(testData2)[1]
 #######################################
 #### SOM
 #######################################
-
+library(kohonen)
+som_model <- supersom(as.matrix(trainData3[,-1]),
+                 grid=somgrid(10,10), 
+                 rlen=100, 
+                 alpha=c(0.05,0.01), 
+                 keep.data = TRUE)
 
 #######################################
 #### Clustering based methods. can we find clusters?

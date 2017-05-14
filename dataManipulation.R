@@ -214,18 +214,35 @@ testData$PHONE_NUMBER_START <- PHONE_NUMBER_START
 ##########################################
 
 #training data
-transAmoIsDecNr <- vector("logical", dim(trainData)[1])
-for (i in 1:dim(trainData)[1]) {
-  transAmoIsDecNr[i] <- !trainData$TRANS_AMO[i]%%1 == 0
-}
-trainData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
+DECIMAL_COST <- rep(0,dim(trainData)[1])
+DECIMAL_COST[which(trainData$TRANS_AMO%%1 != 0)] <- 1
+trainData$DECIMAL_COST <- DECIMAL_COST
 
 #testing data
-transAmoIsDecNr <- vector("logical", dim(testData)[1])
-for (i in 1:dim(testData)[1]) {
-  transAmoIsDecNr[i] <- !trainData$TRANS_AMO[i]%%1 == 0
+DECIMAL_COST <- rep(0,dim(testData)[1])
+DECIMAL_COST[which(testData$TRANS_AMO%%1 != 0)] <- 1
+testData$DECIMAL_COST <- DECIMAL_COST
+
+
+##########################################
+#### How many EQUAL_AMOUNT do each payment have? (for integer values)
+##########################################
+
+#training data
+NR_OF_EQUAL_AMOUNT <- rep(0,nrow(trainData))
+ii <- which(trainData$DECIMAL_COST == 0)
+for (amount in unique(trainData$TRANS_AMO[ii])) {
+  NR_OF_EQUAL_AMOUNT[which(trainData$TRANS_AMO == amount)] <- length(which(trainData$TRANS_AMO == amount))
 }
-testData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
+trainData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
+
+#test data
+NR_OF_EQUAL_AMOUNT <- rep(0,nrow(testData))
+ii <- which(testData$DECIMAL_COST == 0)
+for (amount in unique(testData$TRANS_AMO[ii])) {
+  NR_OF_EQUAL_AMOUNT[which(testData$TRANS_AMO == amount)] <- length(which(testData$TRANS_AMO == amount))
+}
+testData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
 
 ##########################################
 #### Convert weekdays to dummy variables

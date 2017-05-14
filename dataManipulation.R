@@ -169,19 +169,21 @@ testData$sincePayday <- sincePayday
 #check for PUR94 and even 100 numbers.
 
 #training data
-evenPUR94 <- vector(mode = "numeric", length = dim(trainData)[1])
-for (i in 1:dim(trainData2)[1]) {
-  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' & trainData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
-}
-trainData$EVEN_WITHDRAWAL <- evenPUR94
+evenPUR94 <- rep(0,dim(trainData)[1])
+ii <- which(trainData$TRANSTYP_CODE == 'PUR94')
+jj <- which(trainData$MRCH_CTRY[ii] == "SE")
+kk <- which(trainData$TRANS_AMO[ii[jj]]%%100 == 0)
+evenPUR94[ii[jj[kk]]] <- 1
+trainData$EVEN_WITHDRAWAL_SE <- evenPUR94
 
 
 #testing data
-evenPUR94 <- vector(mode = "numeric", length = dim(testData)[1])
-for (i in 1:dim(testData2)[1]) {
-  ifelse(testData$TRANSTYP_CODE[i] == 'PUR94' & testData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
-}
-testData$EVEN_WITHDRAWAL <- evenPUR94
+evenPUR94 <- rep(0,dim(testData)[1])
+ii <- which(testData$TRANSTYP_CODE == 'PUR94')
+jj <- which(testData$MRCH_CTRY[ii] == "SE")
+kk <- which(testData$TRANS_AMO[ii[jj]]%%100 == 0)
+evenPUR94[ii[jj[kk]]] <- 1
+testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 
 
 ########################################
@@ -212,24 +214,24 @@ testData$PHONE_PAYMENT <- PHONE_PAYMENT
 trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
                          trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
                          trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
-                         trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL)
+                         trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL_SE)
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
-                       'EVEN_WITHDRAWAL')
-write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
+                       'EVEN_WITHDRAWAL_SE')
+write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
 
 testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, testData$month, 
                         testData$weekday, testData$BIRTH_YEAR, testData$SEX,
                         testData$TRANS_AMO, testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
-                        testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL)
+                        testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL_SE)
 names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
-                      'EVEN_WITHDRAWAL')
-write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
+                      'EVEN_WITHDRAWAL_SE')
+write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
 
 ######################################
@@ -242,5 +244,4 @@ for (i in 2:14) {
   ii <- c(ii,sample(which(trainData2$KEYWORD == names(FRACTIONS)[i]),length(which(trainData2$KEYWORD == names(FRACTIONS)[i]))*min(FRACTIONS)/FRACTIONS[i]))
 }
 trainDataScaled <- trainData2[ii,]
-
 

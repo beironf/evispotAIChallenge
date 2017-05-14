@@ -176,7 +176,6 @@ kk <- which(trainData$TRANS_AMO[ii[jj]]%%100 == 0)
 evenPUR94[ii[jj[kk]]] <- 1
 trainData$EVEN_WITHDRAWAL_SE <- evenPUR94
 
-
 #testing data
 evenPUR94 <- rep(0,dim(testData)[1])
 ii <- which(testData$TRANSTYP_CODE == 'PUR94')
@@ -192,18 +191,12 @@ testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 
 #training data
 PHONE_PAYMENT <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-for (i in 1:length(trainData$MRCH_CITY)) {
-  if (substr(trainData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
-}
+PHONE_PAYMENT[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
 trainData$PHONE_PAYMENT <- PHONE_PAYMENT
-
-
 
 #testing data
 PHONE_PAYMENT <- matrix(0, nrow = dim(testData)[1], ncol = 1)
-for (i in 1:length(testData$MRCH_CITY)) {
-  if (substr(testData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
-}
+PHONE_PAYMENT[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
 testData$PHONE_PAYMENT <- PHONE_PAYMENT
 
 ##########################################
@@ -212,16 +205,12 @@ testData$PHONE_PAYMENT <- PHONE_PAYMENT
 
 #training data
 transAmoIsDecNr <- vector("logical", dim(trainData)[1])
-for (i in 1:dim(trainData)[1]) {
-  transAmoIsDecNr[i] <- !trainData$TRANS_AMO[i]%%1 == 0
-}
+transAmoIsDecNr[which(trainData$TRANS_AMO%%1 != 0)] <- TRUE
 trainData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
 
 #testing data
 transAmoIsDecNr <- vector("logical", dim(testData)[1])
-for (i in 1:dim(testData)[1]) {
-  transAmoIsDecNr[i] <- !trainData$TRANS_AMO[i]%%1 == 0
-}
+transAmoIsDecNr[which(testData$TRANS_AMO%%1 != 0)] <- TRUE
 testData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
 
 ##########################################
@@ -423,27 +412,31 @@ testData$isPUR96 <- isPUR96
 ##########################################
 #training data
 
-trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
+trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, 
                          trainData$BIRTH_YEAR, trainData$SEX,
-                         trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
-                         trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL_SE)
+                         trainData$TRANS_AMO, trainData$IN_HOME_COUNTRY,
+                         trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL_SE,
+                         trainData$DECIMAL_COST, 
+                         trainData[,19:43])
 
-names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
-                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
+names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
-                       'EVEN_WITHDRAWAL_SE')
+                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(trainData[19:43]))
 write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
 
-testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, testData$month, 
-                        testData$weekday, testData$BIRTH_YEAR, testData$SEX,
-                        testData$TRANS_AMO, testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
-                        testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL_SE)
-names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
-                      'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                      'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
-                      'EVEN_WITHDRAWAL_SE')
+testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, 
+                        testData$BIRTH_YEAR, testData$SEX,
+                        testData$TRANS_AMO, testData$IN_HOME_COUNTRY,
+                        testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL_SE,
+                        testData$DECIMAL_COST,
+                        testData[,19:43])
+names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
+                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
+                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(testData[19:43]))
 write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
 

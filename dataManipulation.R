@@ -170,16 +170,16 @@ testData$sincePayday <- sincePayday
 
 #training data
 evenPUR94 <- vector(mode = "numeric", length = dim(trainData)[1])
-for (i in 1:length(month)) {
-  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' && trainData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
+for (i in 1:dim(trainData2)[1]) {
+  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' & trainData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
 }
 trainData$EVEN_WITHDRAWAL <- evenPUR94
 
 
 #testing data
 evenPUR94 <- vector(mode = "numeric", length = dim(testData)[1])
-for (i in 1:length(month)) {
-  ifelse(testData$TRANSTYP_CODE[i] == 'PUR94' && testData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
+for (i in 1:dim(testData2)[1]) {
+  ifelse(testData$TRANSTYP_CODE[i] == 'PUR94' & testData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
 }
 testData$EVEN_WITHDRAWAL <- evenPUR94
 
@@ -217,7 +217,7 @@ names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
                        'EVEN_WITHDRAWAL')
-#write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
+write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
 
 #testing data
 
@@ -229,7 +229,7 @@ names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
                       'EVEN_WITHDRAWAL')
-#write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
+write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
 
 
 ######################################

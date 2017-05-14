@@ -1,3 +1,7 @@
+#trainData2 <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data2.csv", header = T, na.strings=" ")
+#testData2 <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data2.csv", header = T, na.strings=" ")
+#testData2 <- testData2[,-11]
+
 ######################################
 #### Predict with random forest
 ######################################

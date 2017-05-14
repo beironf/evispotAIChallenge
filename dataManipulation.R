@@ -163,10 +163,10 @@ testData$sincePayday <- sincePayday
 
 
 ####################################
-#### ATM transaction?
+#### ATM transaction
 ####################################
 
-#check for PUR94 and even 100 numbers.
+#check for PUR94, even 100 numbers and if country is 'SE'.
 
 #training data
 evenPUR94 <- rep(0,dim(trainData)[1])
@@ -190,14 +190,14 @@ testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 ########################################
 
 #training data
-PHONE_PAYMENT <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-PHONE_PAYMENT[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
-trainData$PHONE_PAYMENT <- PHONE_PAYMENT
+PHONE_NUMBER_START <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
+PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
+trainData$PHONE_NUMBER_START <- PHONE_NUMBER_START
 
 #testing data
-PHONE_PAYMENT <- matrix(0, nrow = dim(testData)[1], ncol = 1)
-PHONE_PAYMENT[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
-testData$PHONE_PAYMENT <- PHONE_PAYMENT
+PHONE_NUMBER_START <- matrix(0, nrow = dim(testData)[1], ncol = 1)
+PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
+testData$PHONE_NUMBER_START <- PHONE_NUMBER_START
 
 ##########################################
 #### Check if transaction amount is decimal number
@@ -415,14 +415,15 @@ testData$isPUR96 <- isPUR96
 trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, 
                          trainData$BIRTH_YEAR, trainData$SEX,
                          trainData$TRANS_AMO, trainData$IN_HOME_COUNTRY,
-                         trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL_SE,
+                         trainData$IN_HOME_TOWN, trainData$PHONE_NUMBER_START, trainData$EVEN_WITHDRAWAL_SE,
                          trainData$DECIMAL_COST, 
                          trainData[,19:43])
 
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
                        'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(trainData[19:43]))
+
 write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
@@ -430,13 +431,14 @@ write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, 
                         testData$BIRTH_YEAR, testData$SEX,
                         testData$TRANS_AMO, testData$IN_HOME_COUNTRY,
-                        testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL_SE,
+                        testData$IN_HOME_TOWN, testData$PHONE_NUMBER_START, testData$EVEN_WITHDRAWAL_SE,
                         testData$DECIMAL_COST,
                         testData[,19:43])
 names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
                        'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(testData[19:43]))
+
 write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
 

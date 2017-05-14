@@ -203,6 +203,8 @@ for (i in 1:length(testData$MRCH_CITY)) {
   if (substr(testData$MRCH_CITY[i], 1, 1) == '+') PHONE_PAYMENT[i] <- 1
 }
 testData$PHONE_PAYMENT <- PHONE_PAYMENT
+
+
 ##########################################
 #### Build data set with only relevant variables
 ##########################################
@@ -216,7 +218,7 @@ names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
                        'EVEN_WITHDRAWAL')
-#write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
+#write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
 
@@ -228,8 +230,21 @@ names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
                       'EVEN_WITHDRAWAL')
-#write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
+#write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
+
+######################################
+#### Scale the training data (grocery_store is huge)
+######################################
+
+FRACTIONS <- summary(trainData$KEYWORD)/nrow(trainData)
+ii <- sample(which(trainData2$KEYWORD == names(FRACTIONS)[1]),length(which(trainData2$KEYWORD == names(FRACTIONS)[1]))*min(FRACTIONS)/FRACTIONS[1])
+for (i in 2:14) {
+  ii <- c(ii,sample(which(trainData2$KEYWORD == names(FRACTIONS)[i]),length(which(trainData2$KEYWORD == names(FRACTIONS)[i]))*min(FRACTIONS)/FRACTIONS[i]))
+}
+trainDataScaled <- trainData2[ii,]
+
+  
 ######################################
 #### Predict with random forest
 ######################################

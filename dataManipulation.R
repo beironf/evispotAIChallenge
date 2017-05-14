@@ -190,28 +190,55 @@ testData$EVEN_WITHDRAWAL_SE <- evenPUR94
 ########################################
 
 #training data
-PHONE_NUMBER_START <- matrix(0, nrow = dim(trainData)[1], ncol = 1)
-PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY, 1, 1) == '+')] <- 1
-trainData$PHONE_NUMBER_START <- PHONE_NUMBER_START
+PHONE_NUMBER_START <- rep("IN_CITY", dim(trainData)[1])
+PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY,1,1) == '+')] <- '+'
+for (i in 0:9) {
+  PHONE_NUMBER_START[which(substr(trainData$MRCH_CITY,1,1) == as.character(i))] <- as.character(i)
+}
+trainData$PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
 
 #testing data
-PHONE_NUMBER_START <- matrix(0, nrow = dim(testData)[1], ncol = 1)
-PHONE_NUMBER_START[which(substr(testData$MRCH_CITY, 1, 1) == '+')] <- 1
-testData$PHONE_NUMBER_START <- PHONE_NUMBER_START
+PHONE_NUMBER_START <- rep("IN_CITY", dim(testData)[1])
+PHONE_NUMBER_START[which(substr(testData$MRCH_CITY,1,1) == '+')] <- '+'
+for (i in 0:9) {
+  PHONE_NUMBER_START[which(substr(testData$MRCH_CITY,1,1) == as.character(i))] <- as.character(i)
+}
+testData$PHONE_NUMBER_START <- as.factor(PHONE_NUMBER_START)
 
 ##########################################
 #### Check if transaction amount is decimal number
 ##########################################
 
 #training data
-transAmoIsDecNr <- vector("logical", dim(trainData)[1])
-transAmoIsDecNr[which(trainData$TRANS_AMO%%1 != 0)] <- TRUE
-trainData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
+DECIMAL_COST <- rep(0,dim(trainData)[1])
+DECIMAL_COST[which(trainData$TRANS_AMO%%1 != 0)] <- 1
+trainData$DECIMAL_COST <- DECIMAL_COST
 
 #testing data
-transAmoIsDecNr <- vector("logical", dim(testData)[1])
-transAmoIsDecNr[which(testData$TRANS_AMO%%1 != 0)] <- TRUE
-testData$DECIMAL_COST <- as.numeric(transAmoIsDecNr)
+DECIMAL_COST <- rep(0,dim(testData)[1])
+DECIMAL_COST[which(testData$TRANS_AMO%%1 != 0)] <- 1
+testData$DECIMAL_COST <- DECIMAL_COST
+
+
+##########################################
+#### How many EQUAL_AMOUNT do each payment have? (for integer values)
+##########################################
+
+#training data
+NR_OF_EQUAL_AMOUNT <- rep(0,nrow(trainData))
+ii <- which(trainData$DECIMAL_COST == 0)
+for (amount in unique(trainData$TRANS_AMO[ii])) {
+  NR_OF_EQUAL_AMOUNT[which(trainData$TRANS_AMO == amount)] <- length(which(trainData$TRANS_AMO == amount))
+}
+trainData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
+
+#test data
+NR_OF_EQUAL_AMOUNT <- rep(0,nrow(testData))
+ii <- which(testData$DECIMAL_COST == 0)
+for (amount in unique(testData$TRANS_AMO[ii])) {
+  NR_OF_EQUAL_AMOUNT[which(testData$TRANS_AMO == amount)] <- length(which(testData$TRANS_AMO == amount))
+}
+testData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
 
 ##########################################
 #### Convert weekdays to dummy variables

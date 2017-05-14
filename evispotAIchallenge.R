@@ -2,8 +2,6 @@
 #testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
 #testData <- testData[,-11]
 
-library(lubridate)
-
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
 MaxTable <- function(InVec, mult = FALSE) {
@@ -28,6 +26,14 @@ testData$MRCH_CITY <- gsub("å|ä|ö|Å|Ä|Ö|A|E|O|a|e|o| ","", as.character(te
 testData$MRCH_CITY[which(is.na(testData$MRCH_CITY))] <- "NO_TOWN"
 testData$MRCH_CITY <- as.factor(sapply(testData$MRCH_CITY, toupper))
 
+#######################################
+#### Fix TRANS_AMO from levels to numeric
+#######################################
+trainData$TRANS_AMO <- gsub(",",".", as.character(trainData$TRANS_AMO))
+testData$TRANS_AMO <- gsub(",",".", as.character(testData$TRANS_AMO))
+
+trainData$TRANS_AMO <- as.numeric(trainData$TRANS_AMO)
+testData$TRANS_AMO <- as.numeric(testData$TRANS_AMO)
 
 #############################
 #### Fix missing values in SEX, BIRTH_YEAR
@@ -88,6 +94,8 @@ testData$IN_HOME_TOWN <- IN_HOME_TOWN
 ##############################
 ### What weekday?
 ##############################
+library(lubridate)
+
 #Training data
 
 # First transaction 4/1/2016
@@ -99,8 +107,9 @@ weekday <- factor(weekday,ordered=F)
 month <- month(trainData$DATE,label=T)
 month <- factor(month,ordered=F)
 
-trainData <- cbind(day, month, weekday, trainData)
-
+trainData$day <- day
+trainData$month <- month
+trainData$weekday <- weekday
 
 #Test data
 
@@ -113,15 +122,16 @@ weekday <- factor(weekday,ordered=F)
 month <- month(testData$DATE,label=T)
 month <- factor(month,ordered=F)
 
-testData <- cbind(day, month, weekday, testData)
-
+testData$day <- day
+testData$month <- month
+testData$weekday <- weekday
 
 #####################################
 #### Days since last salary?
 #####################################
 
 #training data
-day <- as.numeric(difftime(trainData$DATE,min(trainData$DATE)-1,units="days"))
+day <- trainData$day
 paydays <- sort(mdy(c('1/25/2017','2/24/2017','3/24/2017','3/25/2016','4/25/2016','5/25/2016','6/24/2016','7/25/2016','8/25/2016','9/23/2016','10/25/2016','11/25/2016','12/23/2016')))
 paydays <- as.numeric(difftime(paydays,min(trainData$DATE)-1,units="days"))
 sincePayday <- day-paydays[1]
@@ -131,12 +141,12 @@ for (i in 2:length(paydays)) {
 sincePayday[which(sincePayday < 0)] <- -1000
 sincePayday <- apply(abs(sincePayday),1,min)
 
-trainData <- cbind(sincePayday, trainData)
+trainData$sincePayday <- sincePayday
 
 #testing data
-day <- as.numeric(difftime(testData$DATE,min(testData$DATE)-1,units="days"))
+day <- testData$day
 paydays <- sort(mdy(c('1/25/2017','2/24/2017','3/24/2017','3/25/2016','4/25/2016','5/25/2016','6/24/2016','7/25/2016','8/25/2016','9/23/2016','10/25/2016','11/25/2016','12/23/2016')))
-paydays <- as.numeric(difftime(paydays,min(trainData$DATE)-1,units="days"))
+paydays <- as.numeric(difftime(paydays,min(testData$DATE)-1,units="days"))
 sincePayday <- day-paydays[1]
 for (i in 2:length(paydays)) {
   sincePayday <- cbind(sincePayday,day-paydays[i])
@@ -144,7 +154,7 @@ for (i in 2:length(paydays)) {
 sincePayday[which(sincePayday < 0)] <- -1000
 sincePayday <- apply(abs(sincePayday),1,min)
 
-testData <- cbind(sincePayday, testData)
+testData$sincePayday <- sincePayday
 
 ####################################
 #### Any PUR96 within last week? (exchange of money?)
@@ -159,21 +169,19 @@ testData <- cbind(sincePayday, testData)
 #check for PUR94 and even 100 numbers.
 
 #training data
-temp <- as.numeric(levels(trainData$TRANS_AMO))[trainData$TRANS_AMO]
-evenPUR94 <- vector(mode = "logical", length = length(month))
+evenPUR94 <- vector(mode = "numeric", length = dim(trainData)[1])
 for (i in 1:length(month)) {
-  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' && temp[i]%%100 == 0, evenPUR94[i] <- TRUE, evenPUR94[i] <- FALSE) 
+  ifelse(trainData$TRANSTYP_CODE[i] == 'PUR94' && trainData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
 }
-trainData <- cbind(evenPUR94, trainData)
+trainData$EVEN_WITHDRAWAL <- evenPUR94
 
 
 #testing data
-temp <- as.numeric(levels(testData$TRANS_AMO))[testData$TRANS_AMO]
-evenPUR94 <- vector(mode = "logical", length = length(month))
+evenPUR94 <- vector(mode = "numeric", length = dim(testData)[1])
 for (i in 1:length(month)) {
-  ifelse(testData$TRANSTYP_CODE[i] == 'PUR94' && temp[i]%%100 == 0, evenPUR94[i] <- TRUE, evenPUR94[i] <- FALSE) 
+  ifelse(testData$TRANSTYP_CODE[i] == 'PUR94' && testData$TRANS_AMO[i]%%100 == 0, evenPUR94[i] <- 1, evenPUR94[i] <- 0) 
 }
-testData <- cbind(evenPUR94, testData)
+testData$EVEN_WITHDRAWAL <- evenPUR94
 
 
 ########################################
@@ -198,32 +206,29 @@ testData$PHONE_PAYMENT <- PHONE_PAYMENT
 ##########################################
 #### Build data set with only relevant variables
 ##########################################
-
 #training data
-# Change , to . in TRANS_AMO
-trainData$TRANS_AMO <- gsub(",",".", as.character(trainData$TRANS_AMO))
 
 trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, trainData$month, 
                     trainData$weekday, trainData$BIRTH_YEAR, trainData$SEX,
-                    as.numeric(trainData$TRANS_AMO), trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
-                    trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT)
+                    trainData$TRANS_AMO, trainData$TRANSTYP_CODE, trainData$IN_HOME_COUNTRY,
+                    trainData$IN_HOME_TOWN, trainData$PHONE_PAYMENT, trainData$EVEN_WITHDRAWAL)
 names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT')
-write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
+                       'EVEN_WITHDRAWAL')
+#write.csv(trainData2, '/home/simon/Programming/evispotAIChallenge/data/training_data2.csv')
 
 #testing data
-# Change , to . in TRANS_AMO
-testData$TRANS_AMO <- gsub(",",".", as.character(testData$TRANS_AMO))
 
 testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, testData$month, 
                          testData$weekday, testData$BIRTH_YEAR, testData$SEX,
-                         as.numeric(testData$TRANS_AMO), testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
-                         testData$IN_HOME_TOWN, testData$PHONE_PAYMENT)
+                         testData$TRANS_AMO, testData$TRANSTYP_CODE, testData$IN_HOME_COUNTRY,
+                         testData$IN_HOME_TOWN, testData$PHONE_PAYMENT, testData$EVEN_WITHDRAWAL)
 names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO', 'TRANSTYP_CODE',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT')
-write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
+                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
+                      'EVEN_WITHDRAWAL')
+#write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
 
 ######################################
 #### Predict with random forest
@@ -251,3 +256,13 @@ rf.object <- randomForest(x = trainData2[,-1], y = trainData2[,1],
 library(e1071)
 nb.object <- naiveBayes(KEYWORD~., data = trainData2)
 nb.pred <- predict(nb.object, testData2)
+
+
+#######################################
+#### SOM
+#######################################
+
+
+#######################################
+#### Clustering based methods. can we find clusters?
+#######################################

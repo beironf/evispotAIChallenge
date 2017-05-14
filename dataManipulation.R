@@ -230,3 +230,17 @@ names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 'MONTH', 'WEEKDAY',
                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_PAYMENT',
                       'EVEN_WITHDRAWAL')
 #write.csv(testData2, '/home/simon/Programming/evispotAIChallenge/data/test_data2.csv')
+
+
+######################################
+#### Scale the training data (grocery_store is huge)
+######################################
+
+FRACTIONS <- summary(trainData$KEYWORD)/nrow(trainData)
+ii <- sample(which(trainData2$KEYWORD == names(FRACTIONS)[1]),length(which(trainData2$KEYWORD == names(FRACTIONS)[1]))*min(FRACTIONS)/FRACTIONS[1])
+for (i in 2:14) {
+  ii <- c(ii,sample(which(trainData2$KEYWORD == names(FRACTIONS)[i]),length(which(trainData2$KEYWORD == names(FRACTIONS)[i]))*min(FRACTIONS)/FRACTIONS[i]))
+}
+trainDataScaled <- trainData2[ii,]
+
+

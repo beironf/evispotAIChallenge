@@ -406,6 +406,12 @@ testData$isPUR93 <- isPUR93
 testData$isPUR94 <- isPUR94
 testData$isPUR96 <- isPUR96
 
+#########################################
+#### Change logicals to numerics
+########################################
+trainData[,19:43] <- as.numeric(as.matrix(trainData[,19:43]))
+testData[,19:43] <- as.numeric(as.matrix(testData[,19:43]))
+
 
 ##########################################
 #### Build data set with only relevant variables
@@ -434,12 +440,13 @@ testData2 <- data.frame(testData$KEYWORD, testData$sincePayday,
                         testData$IN_HOME_TOWN, testData$PHONE_NUMBER_START, testData$EVEN_WITHDRAWAL_SE,
                         testData$DECIMAL_COST,
                         testData[,19:43])
+
 names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
                        'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
                        'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
                        'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(testData[19:43]))
 
-write.csv(trainData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
+write.csv(testData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 
 
 ######################################

@@ -1,6 +1,6 @@
-trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
-testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
-testData <- testData[,-11]
+#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
+#testData <- testData[,-11]
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -438,8 +438,8 @@ testData$isPUR96 <- isPUR96
 #########################################
 #### Change logicals to numerics
 ########################################
-trainData[,21:45] <- as.numeric(as.matrix(trainData[,21:45]))
-testData[,21:45] <- as.numeric(as.matrix(testData[,21:45]))
+trainData[,20:44] <- as.numeric(as.matrix(trainData[,20:44]))
+testData[,20:44] <- as.numeric(as.matrix(testData[,20:44]))
 
 
 ##########################################
@@ -457,8 +457,8 @@ trainData2 <- data.frame(trainData$KEYWORD,
                          trainData$PHONE_NUMBER_START, 
                          trainData$EVEN_WITHDRAWAL_SE,
                          trainData$DECIMAL_COST, 
-                         trainData$NR_OF_EQUAL_AMOUNT,
-                         trainData[,21:45])
+                         trainData$EQUAL_AMOUNT,
+                         trainData[,20:44])
 
 names(trainData2) <- c("KEYWORD", 
                        'SINCE_PAY_DAY', 
@@ -470,8 +470,8 @@ names(trainData2) <- c("KEYWORD",
                        'PHONE_NUMBER_START',
                        'EVEN_WITHDRAWAL_SE', 
                        'DECIMAL_COST',
-                       'NR_OF_EQUAL_AMOUNT',
-                       names(trainData[21:45]))
+                       'EQUAL_AMOUNT',
+                       names(trainData[20:44]))
 
 write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
@@ -487,8 +487,8 @@ testData2 <- data.frame(testData$KEYWORD,
                         testData$PHONE_NUMBER_START, 
                         testData$EVEN_WITHDRAWAL_SE,
                         testData$DECIMAL_COST,
-                        testData$NR_OF_EQUAL_AMOUNT,
-                        testData[,21:45])
+                        testData$EQUAL_AMOUNT,
+                        testData[,20:44])
 
 names(testData2) <- c("KEYWORD", 
                       'SINCE_PAY_DAY', 
@@ -500,8 +500,8 @@ names(testData2) <- c("KEYWORD",
                       'PHONE_NUMBER_START',
                       'EVEN_WITHDRAWAL_SE', 
                       'DECIMAL_COST', 
-                      'NR_OF_EQUAL_AMOUNT',
-                      names(testData[21:45]))
+                      'EQUAL_AMOUNT',
+                      names(testData[,20:44]))
 
 write.csv(testData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 

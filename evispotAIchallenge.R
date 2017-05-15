@@ -7,8 +7,8 @@
 ######################################
 
 library(randomForest)
-rf.object <- randomForest(x = trainData2[,-1], y = trainData2[,1],
-                   xtest = testData2[,-1], ytest = testData2[,1],
+rf.object <- randomForest(x = trainData4[,-1], y = trainData4[,1],
+                   xtest = testData4[,-1], ytest = testData4[,1],
                    proximity = F)
 #library(h2o)
 #localH2O <- h2o.init()

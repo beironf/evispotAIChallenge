@@ -221,6 +221,27 @@ testData$DECIMAL_COST <- DECIMAL_COST
 
 
 ##########################################
+#### Check if decimal is even (0.1, 0.2, 0.3 ...)
+##########################################
+
+#training data
+EVEN_DECIMAL <- rep(0,nrow(trainData))
+ii <- which(trainData$DECIMAL_COST == 1)
+decimal_rest <- 100*(trainData$TRANS_AMO[ii]%%1)
+jj <- which(round(decimal_rest)%%10 == 0)
+EVEN_DECIMAL[ii[jj]] <- 1
+trainData$EVEN_DECIMAL <- EVEN_DECIMAL
+
+#training data
+EVEN_DECIMAL <- rep(0,nrow(testData))
+ii <- which(testData$DECIMAL_COST == 1)
+decimal_rest <- 100*(testData$TRANS_AMO[ii]%%1)
+jj <- which(round(decimal_rest)%%10 == 0)
+EVEN_DECIMAL[ii[jj]] <- 1
+testData$EVEN_DECIMAL <- EVEN_DECIMAL
+
+
+##########################################
 #### How many equal amounts? X % equal of all obs. 
 ##########################################
 

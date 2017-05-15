@@ -1,6 +1,6 @@
-#trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
-#testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
-#testData <- testData[,-11]
+trainData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/training_data.csv", header = T, na.strings=" ")
+testData <- read.csv("/home/simon/Programming/evispotAIChallenge/data/test_data.csv", header = T, na.strings=" ")
+testData <- testData[,-11]
 
 #Function to check what is the plurality factor in a  set
 #Can return multiple choices if there is a tie (optional)
@@ -436,8 +436,8 @@ testData$isPUR96 <- isPUR96
 #########################################
 #### Change logicals to numerics
 ########################################
-trainData[,19:43] <- as.numeric(as.matrix(trainData[,19:43]))
-testData[,19:43] <- as.numeric(as.matrix(testData[,19:43]))
+trainData[,21:45] <- as.numeric(as.matrix(trainData[,21:45]))
+testData[,21:45] <- as.numeric(as.matrix(testData[,21:45]))
 
 
 ##########################################
@@ -445,33 +445,61 @@ testData[,19:43] <- as.numeric(as.matrix(testData[,19:43]))
 ##########################################
 #training data
 
-trainData2 <- data.frame(trainData$KEYWORD, trainData$sincePayday, 
-                         trainData$BIRTH_YEAR, trainData$SEX,
-                         trainData$TRANS_AMO, trainData$IN_HOME_COUNTRY,
-                         trainData$IN_HOME_TOWN, trainData$PHONE_NUMBER_START, trainData$EVEN_WITHDRAWAL_SE,
+trainData2 <- data.frame(trainData$KEYWORD, 
+                         trainData$sincePayday, 
+                         trainData$BIRTH_YEAR, 
+                         trainData$SEX,
+                         trainData$TRANS_AMO, 
+                         trainData$IN_HOME_COUNTRY,
+                         trainData$IN_HOME_TOWN, 
+                         trainData$PHONE_NUMBER_START, 
+                         trainData$EVEN_WITHDRAWAL_SE,
                          trainData$DECIMAL_COST, 
-                         trainData[,19:43])
+                         trainData$NR_OF_EQUAL_AMOUNT,
+                         trainData[,21:45])
 
-names(trainData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
-                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
-                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(trainData[19:43]))
+names(trainData2) <- c("KEYWORD", 
+                       'SINCE_PAY_DAY', 
+                       'BIRTH_YEAR', 
+                       'SEX', 
+                       'TRANS_AMO',
+                       'IN_HOME_COUNTRY', 
+                       'IN_HOME_TOWN', 
+                       'PHONE_NUMBER_START',
+                       'EVEN_WITHDRAWAL_SE', 
+                       'DECIMAL_COST',
+                       'NR_OF_EQUAL_AMOUNT',
+                       names(trainData[21:45]))
 
 write.csv(trainData2, paste(dir,'/data/training_data2.csv',sep=""),row.names=F)
 
 #testing data
 
-testData2 <- data.frame(testData$KEYWORD, testData$sincePayday, 
-                        testData$BIRTH_YEAR, testData$SEX,
-                        testData$TRANS_AMO, testData$IN_HOME_COUNTRY,
-                        testData$IN_HOME_TOWN, testData$PHONE_NUMBER_START, testData$EVEN_WITHDRAWAL_SE,
+testData2 <- data.frame(testData$KEYWORD, 
+                        testData$sincePayday, 
+                        testData$BIRTH_YEAR, 
+                        testData$SEX,
+                        testData$TRANS_AMO, 
+                        testData$IN_HOME_COUNTRY,
+                        testData$IN_HOME_TOWN, 
+                        testData$PHONE_NUMBER_START, 
+                        testData$EVEN_WITHDRAWAL_SE,
                         testData$DECIMAL_COST,
-                        testData[,19:43])
+                        testData$NR_OF_EQUAL_AMOUNT,
+                        testData[,21:45])
 
-names(testData2) <- c("KEYWORD", 'SINCE_PAY_DAY', 
-                       'BIRTH_YEAR', 'SEX', 'TRANS_AMO',
-                       'IN_HOME_COUNTRY', 'IN_HOME_TOWN', 'PHONE_NUMBER_START',
-                       'EVEN_WITHDRAWAL_SE', 'DECIMAL_COST', names(testData[19:43]))
+names(testData2) <- c("KEYWORD", 
+                      'SINCE_PAY_DAY', 
+                      'BIRTH_YEAR', 
+                      'SEX', 
+                      'TRANS_AMO',
+                      'IN_HOME_COUNTRY', 
+                      'IN_HOME_TOWN', 
+                      'PHONE_NUMBER_START',
+                      'EVEN_WITHDRAWAL_SE', 
+                      'DECIMAL_COST', 
+                      'NR_OF_EQUAL_AMOUNT',
+                      names(testData[21:45]))
 
 write.csv(testData2, paste(dir,'/data/test_data2.csv',sep=""),row.names=F)
 

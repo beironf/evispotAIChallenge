@@ -44,3 +44,13 @@ som_model <- supersom(as.matrix(trainData3[,-1]),
 #######################################
 #### Clustering based methods. can we find clusters?
 #######################################
+
+
+#######################################
+#### kNN
+#######################################
+library(class)
+knn_object_10 <- knn(train =trainData3[,-1], 
+                  test = testData3[,-1], 
+                  cl = trainData3[,1],
+                  k=10)

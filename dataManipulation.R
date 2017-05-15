@@ -221,24 +221,26 @@ testData$DECIMAL_COST <- DECIMAL_COST
 
 
 ##########################################
-#### How many EQUAL_AMOUNT do each payment have? (for integer values)
+#### How many equal amounts? X % equal of all obs. 
 ##########################################
 
 #training data
-NR_OF_EQUAL_AMOUNT <- rep(0,nrow(trainData))
+EQUAL_AMOUNT <- rep(0,nrow(trainData))
 ii <- which(trainData$DECIMAL_COST == 0)
-for (amount in unique(trainData$TRANS_AMO[ii])) {
-  NR_OF_EQUAL_AMOUNT[which(trainData$TRANS_AMO == amount)] <- length(which(trainData$TRANS_AMO == amount))
+AMOUNTS <- unique(trainData$TRANS_AMO[ii])
+pValues <- rep(0,length(AMOUNTS))
+for (amount in AMOUNTS) {
+  EQUAL_AMOUNT[which(trainData$TRANS_AMO == amount)] <- length(which(trainData$TRANS_AMO == amount))/nrow(trainData)
+  pValues[which(AMOUNTS == amount)] <- EQUAL_AMOUNT[which(trainData$TRANS_AMO == amount)[1]]
 }
-trainData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
+trainData$EQUAL_AMOUNT <- EQUAL_AMOUNT
 
 #test data
-NR_OF_EQUAL_AMOUNT <- rep(0,nrow(testData))
-ii <- which(testData$DECIMAL_COST == 0)
-for (amount in unique(testData$TRANS_AMO[ii])) {
-  NR_OF_EQUAL_AMOUNT[which(testData$TRANS_AMO == amount)] <- length(which(testData$TRANS_AMO == amount))
+EQUAL_AMOUNT <- rep(0,nrow(testData))
+for (amount in AMOUNTS) {
+  EQUAL_AMOUNT[which(testData$TRANS_AMO == amount)] <- pValues[which(AMOUNTS == amount)]
 }
-testData$NR_OF_EQUAL_AMOUNT <- NR_OF_EQUAL_AMOUNT
+testData$EQUAL_AMOUNT <- EQUAL_AMOUNT
 
 ##########################################
 #### Convert weekdays to dummy variables
